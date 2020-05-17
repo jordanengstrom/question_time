@@ -15,10 +15,27 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import include, path
+# Using one_step.views allows us to skip email verification for now,
+# but if you need to set it up, you can learn how to do that here:
+# https://django-registration.readthedocs.io/en/3.0/activation-workflow.html
+from django_registration.backends.one_step.views import RegistrationView
+from users.forms import CustomUserForm
 
 urlpatterns = [
     path('admin/', admin.site.urls),
 
+    # Path to custom version of registration view provided by django-registration
+    # This is used to create new accounts via browser
+    path('accounts/register/', RegistrationView.as_view(
+        form_class=CustomUserForm,
+        success_url='/',),
+        name='django_registration_register'
+    ),
+
+    # Other urls used by the django-registration package
+    path('accounts/', include('django_registration.backends.one_step.urls')),
+
+    # The login urls provided by django to login via the browser
     path('accounts/', include('django.contrib.auth.urls')),
 
     # Login via browsable api
