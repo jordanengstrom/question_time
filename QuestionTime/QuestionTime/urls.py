@@ -14,11 +14,12 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import include, path
+from django.urls import include, path, re_path
 # Using one_step.views allows us to skip email verification for now,
 # but if you need to set it up, you can learn how to do that here:
 # https://django-registration.readthedocs.io/en/3.0/activation-workflow.html
 from django_registration.backends.one_step.views import RegistrationView
+from core.views import IndexTemplateView
 from users.forms import CustomUserForm
 
 urlpatterns = [
@@ -38,6 +39,9 @@ urlpatterns = [
     # The login urls provided by django to login via the browser
     path('accounts/', include('django.contrib.auth.urls')),
 
+    # Pulls in urls.py from our users app
+    path('api/', include('users.api.urls')),
+
     # Login via browsable api
     path('api-auth/', include('rest_framework.urls')),
 
@@ -45,5 +49,7 @@ urlpatterns = [
     path('api/rest-auth/', include('rest_auth.urls')),
 
     # Registration via rest
-    path('api/rest-auth/registration/', include('rest_auth.registration.urls'))
+    path('api/rest-auth/registration/', include('rest_auth.registration.urls')),
+
+    re_path(r'^.*$', IndexTemplateView.as_view(), name='entry-point')
 ]
