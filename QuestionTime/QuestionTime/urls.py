@@ -42,6 +42,9 @@ urlpatterns = [
     # Pulls in urls.py from our users app
     path('api/', include('users.api.urls')),
 
+    # Pulls in urls.py from questions.api
+    path('api/', include('questions.api.urls')),
+
     # Login via browsable api
     path('api-auth/', include('rest_framework.urls')),
 
